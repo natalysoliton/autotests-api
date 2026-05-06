@@ -1,9 +1,19 @@
-"""
-Модуль для работы с API заданий (exercises).
+from clients.exercises.exercises_client import (
+    ExercisesClient,
+    get_exercises_client,
+    Exercise,
+    CreateExerciseRequestDict,
+    CreateExerciseResponseDict,
+    GetExercisesQueryDict,
+    GetExercisesResponseDict,
+)
 
-Содержит клиент ExercisesClient для взаимодействия с эндпоинтами /api/v1/exercises.
-"""
-
-from clients.exercises.exercises_client import ExercisesClient
-
-__all__ = ["ExercisesClient"]
+__all__ = [
+    'ExercisesClient',
+    'get_exercises_client',
+    'Exercise',
+    'CreateExerciseRequestDict',
+    'CreateExerciseResponseDict',
+    'GetExercisesQueryDict',
+    'GetExercisesResponseDict',
+]

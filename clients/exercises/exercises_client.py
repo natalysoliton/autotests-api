@@ -3,6 +3,41 @@ from typing import TypedDict
 from httpx import Response
 
 from clients.api_client import APIClient
+from clients.private_http_builder import AuthenticationUserDict, get_private_http_client
+
+
+class Exercise(TypedDict):
+    """
+    Описание структуры задания.
+    """
+    id: str
+    title: str
+    courseId: str
+    maxScore: int
+    minScore: int
+    orderIndex: int
+    description: str
+    estimatedTime: str
+
+
+class CreateExerciseRequestDict(TypedDict):
+    """
+    Описание структуры запроса на создание задания.
+    """
+    title: str | None
+    courseId: str
+    maxScore: int | None
+    minScore: int | None
+    orderIndex: int | None
+    description: str | None
+    estimatedTime: str | None
+
+
+class CreateExerciseResponseDict(TypedDict):
+    """
+    Описание структуры ответа на создание задания.
+    """
+    exercise: Exercise
 
 
 class GetExercisesQueryDict(TypedDict):
@@ -12,109 +47,47 @@ class GetExercisesQueryDict(TypedDict):
     courseId: str
 
 
-class CreateExerciseRequestDict(TypedDict):
+class GetExercisesResponseDict(TypedDict):
     """
-    Описание структуры запроса на создание задания.
+    Описание структуры ответа на получение списка заданий.
     """
-    title: str
-    description: str
-    maxScore: int
-    courseId: str
-
-
-class UpdateExerciseRequestDict(TypedDict):
-    """
-    Описание структуры запроса на обновление задания.
-
-    Поля имеют тип str | None или int | None, так как PATCH-запрос
-    обновляет только те поля, которые явно указаны в запросе.
-    Если поле не передано (None), оно остается неизменным.
-    """
-    title: str | None
-    description: str | None
-    maxScore: int | None
+    exercises: list[Exercise]
 
 
 class ExercisesClient(APIClient):
     """
-    Клиент для работы с /api/v1/exercises.
-
-    Предоставляет методы для выполнения операций CRUD с заданиями:
-    - получение списка заданий для определенного курса
-    - получение информации о конкретном задании
-    - создание нового задания
-    - обновление существующего задания
-    - удаление задания
+    Клиент для работы с /api/v1/exercises
     """
-
-    def get_exercises_api(self, query: GetExercisesQueryDict) -> Response:
-        """
-        Получение списка заданий для определенного курса.
-
-        Метод выполняет GET-запрос к эндпоинту /api/v1/exercises
-        и передает courseId в качестве query-параметра.
-
-        :param query: Словарь с courseId - идентификатор курса,
-                      для которого необходимо получить список заданий.
-        :return: Ответ от сервера в виде объекта httpx.Response.
-                 В случае успеха (200 OK) тело ответа содержит список заданий.
-        """
-        return self.get("/api/v1/exercises", params=query)
-
-    def get_exercise_api(self, exercise_id: str) -> Response:
-        """
-        Получение информации о задании по его идентификатору.
-
-        :param exercise_id: Идентификатор задания (строка UUID).
-        :return: Ответ от сервера в виде объекта httpx.Response.
-                 При успешном выполнении (200 OK) тело ответа содержит
-                 полную информацию о задании: id, title, description,
-                 maxScore, courseId.
-        """
-        return self.get(f"/api/v1/exercises/{exercise_id}")
 
     def create_exercise_api(self, request: CreateExerciseRequestDict) -> Response:
         """
-        Создание нового задания.
-
-        Метод отправляет POST-запрос с данными нового задания в формате JSON.
-
-        :param request: Словарь с обязательными полями:
-                       - title: Название задания
-                       - description: Описание задания
-                       - maxScore: Максимальный балл за задание
-                       - courseId: Идентификатор курса, к которому относится задание
-        :return: Ответ от сервера в виде объекта httpx.Response.
-                 При успешном создании (201 Created) тело ответа содержит
-                 созданный объект задания с присвоенным id.
+        Метод создания задания.
         """
         return self.post("/api/v1/exercises", json=request)
 
-    def update_exercise_api(self, exercise_id: str, request: UpdateExerciseRequestDict) -> Response:
+    def create_exercise(self, request: CreateExerciseRequestDict) -> CreateExerciseResponseDict:
         """
-        Обновление данных существующего задания.
-
-        Метод выполняет PATCH-запрос, который обновляет только те поля,
-        которые явно указаны в запросе. Поля со значением None игнорируются.
-
-        :param exercise_id: Идентификатор обновляемого задания.
-        :param request: Словарь с необязательными полями для обновления:
-                       - title: Новое название задания (или None)
-                       - description: Новое описание задания (или None)
-                       - maxScore: Новый максимальный балл (или None)
-        :return: Ответ от сервера в виде объекта httpx.Response.
-                 При успешном обновлении (200 OK) тело ответа содержит
-                 обновленный объект задания.
+        Метод создания задания с автоматическим извлечением JSON.
         """
-        return self.patch(f"/api/v1/exercises/{exercise_id}", json=request)
+        response = self.create_exercise_api(request)
+        return response.json()
 
-    def delete_exercise_api(self, exercise_id: str) -> Response:
+    def get_exercises_api(self, query: GetExercisesQueryDict) -> Response:
         """
-        Удаление задания по его идентификатору.
+        Метод получения списка заданий.
+        """
+        return self.get("/api/v1/exercises", params=query)
 
-        :param exercise_id: Идентификатор задания для удаления.
-        :return: Ответ от сервера в виде объекта httpx.Response.
-                 При успешном удалении возвращается статус 204 No Content.
-                 Тело ответа пустое.
+    def get_exercises(self, query: GetExercisesQueryDict) -> GetExercisesResponseDict:
         """
-        return self.delete(f"/api/v1/exercises/{exercise_id}")
+        Метод получения списка заданий с автоматическим извлечением JSON.
+        """
+        response = self.get_exercises_api(query)
+        return response.json()
+
+
+def get_exercises_client(user: AuthenticationUserDict) -> ExercisesClient:
+    """
+    Функция создаёт экземпляр ExercisesClient с уже настроенным HTTP-клиентом.
+    """
+    return ExercisesClient(client=get_private_http_client(user))

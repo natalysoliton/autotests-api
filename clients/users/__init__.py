@@ -1,8 +1,15 @@
-"""Клиенты для работы с эндпоинтами пользователей."""
-
-from clients.users.public_users_client import PublicUsersClient, CreateUserRequestDict
+from clients.users.public_users_client import (
+    PublicUsersClient,
+    get_public_users_client,
+    User,
+    CreateUserRequestDict,
+    CreateUserResponseDict,
+)
 
 __all__ = [
-    "PublicUsersClient",
-    "CreateUserRequestDict",
+    'PublicUsersClient',
+    'get_public_users_client',
+    'User',
+    'CreateUserRequestDict',
+    'CreateUserResponseDict',
 ]
