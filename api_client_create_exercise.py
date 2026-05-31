@@ -9,7 +9,10 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from clients.users.public_users_client import get_public_users_client, CreateUserRequestDict
-from clients.private_http_builder import AuthenticationUserDict
+from clients.private_http_builder import AuthenticationUserSchema
+
+#from clients.private_http_builder import get_private_http_client, AuthenticationUserSchema
+
 from clients.files.files_client import get_files_client, CreateFileRequestDict
 from clients.courses.courses_client import get_courses_client, CreateCourseRequestDict
 from clients.exercises.exercises_client import get_exercises_client, CreateExerciseRequestDict
@@ -46,7 +49,7 @@ def main():
 
     # 2. Инициализация приватных клиентов
     print("\n2. Инициализация приватных клиентов...")
-    authentication_user = AuthenticationUserDict(
+    authentication_user = AuthenticationUserSchema(
         email=create_user_request['email'],
         password=create_user_request['password']
     )

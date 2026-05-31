@@ -1,10 +1,10 @@
-from typing import TypedDict
+#from typing import TypedDict
 
 from httpx import Response
 
 from clients.api_client import APIClient
 from clients.public_http_builder import get_public_http_client
-
+from clients.users.users_schema import CreateUserResponseSchema, CreateUserRequestSchema
 
 class User(TypedDict):
     id: str
@@ -31,13 +31,13 @@ class PublicUsersClient(APIClient):
     Клиент для работы с /api/v1/users (публичные методы)
     """
 
-    def create_user_api(self, request: CreateUserRequestDict) -> Response:
+    def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """
         Метод создает пользователя.
         """
-        return self.post("/api/v1/users", json=request)
+        return self.post("/api/v1/users", json=request.model_dump(by_alias=True))
 
-    def create_user(self, request: CreateUserRequestDict) -> CreateUserResponseDict:
+    def create_user(self, request: CreateUserRequestSchema) -> CreateUserResponseSchema:
         """
         Метод создает пользователя и возвращает JSON.
         """
