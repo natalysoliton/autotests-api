@@ -4,7 +4,7 @@ import httpx
 from tools.fakers import fake
 
 payload = {
-    "email": fake.email(),  # Вместо get_random_email() используем fake.email()
+    "email": fake.email(),  # Вместо fake.email() используем fake.email()
     "password": "string",
     "lastName": "string",
     "firstName": "string",

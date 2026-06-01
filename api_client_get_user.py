@@ -3,18 +3,12 @@ from clients.users.private_users_client import get_private_users_client
 from clients.users.public_users_client import get_public_users_client
 # Вместо CreateUserRequestSchema импортируем CreateUserRequestSchema
 from clients.users.users_schema import CreateUserRequestSchema
-from tools.fakers import get_random_email
+from tools.fakers import fake
 
 public_users_client = get_public_users_client()
 
 # Вместо CreateUserRequestSchema используем CreateUserRequestSchema
-create_user_request = CreateUserRequestSchema(
-    email=get_random_email(),
-    password="string",
-    last_name="string",  # Передаем аргументы в формате snake_case вместо camelCase
-    first_name="string",  # Передаем аргументы в формате snake_case вместо camelCase
-    middle_name="string"  # Передаем аргументы в формате snake_case вместо camelCase
-)
+create_user_request = CreateUserRequestSchema()
 create_user_response = public_users_client.create_user(create_user_request)
 print('Create user data:', create_user_response)
 

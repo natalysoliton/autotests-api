@@ -6,7 +6,7 @@ from clients.users.users_schema import (
 )
 from clients.private_http_builder import AuthenticationUserSchema
 from tools.assertions.schema import validate_json_schema
-from tools.fakers import get_random_email
+from tools.fakers import fake
 
 
 def main():
@@ -14,7 +14,7 @@ def main():
     public_client = get_public_users_client()
 
     create_request = CreateUserRequestSchema(
-        email=get_random_email(),
+        email=fake.email(),
         password="password123",
         last_name="Иванов",
         first_name="Иван",
