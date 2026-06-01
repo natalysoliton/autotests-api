@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+import pytest  # Импортируем библиотеку pytest
+
 from clients.authentication.authentication_client import get_authentication_client
 from clients.authentication.authentication_schema import LoginRequestSchema, LoginResponseSchema
 from clients.users.public_users_client import get_public_users_client
@@ -9,6 +11,8 @@ from tools.assertions.authentication import assert_login_response
 from tools.assertions.schema import validate_json_schema
 
 
+@pytest.mark.regression  # Добавили маркировку regression
+@pytest.mark.authentication  # Добавили маркировку authentication
 def test_login():
     # Инициализируем клиента
     public_users_client = get_public_users_client()
