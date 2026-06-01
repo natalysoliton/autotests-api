@@ -1,23 +1,50 @@
 from http import HTTPStatus
-import pytest  # Импортируем библиотеку pytest
-from clients.users.public_users_client import get_public_users_client
-from clients.users.users_schema import CreateUserRequestSchema, CreateUserResponseSchema
+
+import pytest
+
+from clients.users.private_users_client import PrivateUsersClient
+from clients.users.public_users_client import PublicUsersClient
+from clients.users.users_schema import CreateUserRequestSchema, CreateUserResponseSchema, GetUserResponseSchema
+from tests.conftest import UserFixture
 from tools.assertions.base import assert_status_code
 from tools.assertions.schema import validate_json_schema
-# Импортируем функцию для проверки ответа создания юзера
-from tools.assertions.users import assert_create_user_response
+from tools.assertions.users import assert_create_user_response, assert_get_user_response
 
-@pytest.mark.users  # Добавили маркировку users
-@pytest.mark.regression  # Добавили маркировку regression
-def test_create_user():
-    public_users_client = get_public_users_client()
 
+@pytest.mark.users
+@pytest.mark.regression
+def test_create_user(public_users_client: PublicUsersClient):
     request = CreateUserRequestSchema()
     response = public_users_client.create_user_api(request)
     response_data = CreateUserResponseSchema.model_validate_json(response.text)
 
     assert_status_code(response.status_code, HTTPStatus.OK)
-    # Используем функцию для проверки ответа создания юзера
     assert_create_user_response(request, response_data)
 
+    validate_json_schema(response.json(), response_data.model_json_schema())
+
+
+@pytest.mark.users
+@pytest.mark.regression
+def test_get_user_me(
+    function_user: UserFixture,
+    private_users_client: PrivateUsersClient
+):
+    """
+    Тест проверяет получение данных текущего авторизованного пользователя
+    через эндпоинт GET /api/v1/users/me.
+    """
+    # Отправляем GET-запрос для получения текущего пользователя
+    response = private_users_client.get_user_me_api()
+
+    # Десериализуем JSON-ответ в GetUserResponseSchema
+    response_data = GetUserResponseSchema.model_validate_json(response.text)
+
+    # Проверяем статус-код ответа
+    assert_status_code(response.status_code, HTTPStatus.OK)
+
+    # Проверяем, что данные пользователя соответствуют созданному пользователю
+    assert_get_user_response(response_data, function_user.response)
+
+    # Выполняем валидацию JSON-схемы
     validate_json_schema(response.json(), response_data.model_json_schema())
