@@ -22,8 +22,7 @@ def assert_validation_error_response(
         expected: ValidationErrorResponseSchema
 ):
     """
-    Проверяет, что объект ответа API с ошибками валидации (`ValidationErrorResponseSchema`)
-    соответствует ожидаемому значению.
+    Проверяет, что объект ответа API с ошибками валидации соответствует ожидаемому.
 
     :param actual: Фактический ответ API.
     :param expected: Ожидаемый ответ API.
@@ -34,12 +33,13 @@ def assert_validation_error_response(
     for index, detail in enumerate(expected.details):
         assert_validation_error(actual.details[index], detail)
 
+
 def assert_internal_error_response(
         actual: InternalErrorResponseSchema,
         expected: InternalErrorResponseSchema
 ):
     """
-    Функция для проверки внутренней ошибки. Например, ошибки 404 (File not found).
+    Функция для проверки внутренней ошибки.
 
     :param actual: Фактический ответ API.
     :param expected: Ожидаемый ответ API.
