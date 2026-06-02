@@ -1,13 +1,15 @@
+from typing import List
 from clients.errors_schema import InternalErrorResponseSchema
 from clients.exercises.exercises_schema import (
     ExerciseSchema,
     CreateExerciseRequestSchema,
     CreateExerciseResponseSchema,
     GetExerciseResponseSchema,
+    GetExercisesResponseSchema,
     UpdateExerciseRequestSchema,
     UpdateExerciseResponseSchema
 )
-from tools.assertions.base import assert_equal
+from tools.assertions.base import assert_equal, assert_length
 from tools.assertions.errors import assert_internal_error_response
 
 
@@ -88,9 +90,39 @@ def assert_get_exercise_response(
     assert_exercise(get_exercise_response.exercise, create_exercise_response.exercise)
 
 
+def assert_get_exercises_response(
+        get_exercises_response: GetExercisesResponseSchema,
+        create_exercise_responses: List[CreateExerciseResponseSchema]
+):
+    """
+    Проверяет, что ответ на получение списка заданий соответствует ответам на их создание.
+
+    Функция проверяет:
+    - Длину списка заданий (количество должно совпадать)
+    - Каждое задание в списке должно соответствовать созданному заданию
+
+    :param get_exercises_response: Ответ API при запросе списка заданий.
+    :param create_exercise_responses: Список API ответов при создании заданий.
+    :raises AssertionError: Если данные заданий не совпадают или количество не совпадает.
+    """
+    # Проверяем, что количество заданий в ответе совпадает с количеством созданных
+    assert_length(
+        get_exercises_response.exercises,
+        create_exercise_responses,
+        "exercises list"
+    )
+
+    # Проверяем каждое задание в списке
+    for index, create_exercise_response in enumerate(create_exercise_responses):
+        assert_exercise(
+            get_exercises_response.exercises[index],
+            create_exercise_response.exercise
+        )
+
+
 def assert_exercise_not_found_response(actual: InternalErrorResponseSchema):
     """
-    Проверяет, что ответ на запрос получения несуществующего задания
+    Проверяет, что ответ на запрос получения несуществующего задания 
     соответствует ожидаемой ошибке "Exercise not found".
 
     :param actual: Фактический ответ от API с ошибкой.
