@@ -4,14 +4,7 @@ from clients.api_client import APIClient
 from clients.public_http_builder import get_public_http_client
 from clients.users.users_schema import CreateUserResponseSchema, CreateUserRequestSchema, UserSchema
 import allure  # Импортируем allure
-
-
-# class User(TypedDict):
-#    id: str
-#    email: str
-#    lastName: str
-#    firstName: str
-#   middleName: str
+from tools.routes import APIRoutes  # Импортируем enum APIRoutes
 
 
 class CreateUserRequestSchema(CreateUserRequestSchema):
@@ -36,7 +29,8 @@ class PublicUsersClient(APIClient):
         """
         Метод создает пользователя.
         """
-        return self.post("/api/v1/users", json=request.model_dump(by_alias=True))
+        # Вместо /api/v1/users используем APIRoutes.USERS
+        return self.post(APIRoutes.USERS, json=request.model_dump(by_alias=True))
 
     def create_user(self, request: CreateUserRequestSchema) -> CreateUserResponseSchema:
         """

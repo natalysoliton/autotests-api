@@ -1,5 +1,5 @@
 from httpx import Response
-
+from tools.routes import APIRoutes  # Импортируем enum APIRoutes
 from clients.api_client import APIClient
 from clients.authentication.authentication_schema import (
     LoginRequestSchema,
@@ -43,8 +43,9 @@ class AuthenticationClient(APIClient):
         :param request: Модель с email и password.
         :return: Ответ от сервера в виде объекта httpx.Response
         """
+        # Вместо /api/v1/authentication используем APIRoutes.AUTHENTICATION
         return self.post(
-            "/api/v1/authentication/login",
+            f"{APIRoutes.AUTHENTICATION}/login",
             json=request.model_dump(by_alias=True)
         )
 
@@ -56,8 +57,9 @@ class AuthenticationClient(APIClient):
         :param request: Модель с refreshToken.
         :return: Ответ от сервера в виде объекта httpx.Response
         """
+        # Вместо /api/v1/authentication используем APIRoutes.AUTHENTICATION
         return self.post(
-            "/api/v1/authentication/refresh",
+            f"{APIRoutes.AUTHENTICATION}/refresh",
             json=request.model_dump(by_alias=True)
         )
 
