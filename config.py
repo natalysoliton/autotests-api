@@ -37,7 +37,6 @@ class Settings(BaseSettings):
         # Передаем allure_results_dir в инициализацию настроек
         return Settings(allure_results_dir=allure_results_dir)
 
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         extra='allow',  # Разрешаем дополнительные переменные
@@ -45,7 +44,6 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         env_nested_delimiter=".",
     )
-
 
 # Теперь вызываем метод initialize
 settings = Settings.initialize()
