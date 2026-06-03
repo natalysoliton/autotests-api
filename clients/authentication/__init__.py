@@ -1,17 +1,23 @@
+"""
+Модуль для работы с API аутентификации.
+"""
+
 from clients.authentication.authentication_client import (
     AuthenticationClient,
     get_authentication_client,
-    Token,
-    LoginRequestDict,
-    LoginResponseDict,
-    RefreshRequestDict,
+)
+from clients.authentication.authentication_schema import (
+    LoginRequestSchema,
+    LoginResponseSchema,
+    RefreshRequestSchema,
+    TokenSchema,
 )
 
 __all__ = [
     'AuthenticationClient',
     'get_authentication_client',
-    'Token',
-    'LoginRequestDict',
-    'LoginResponseDict',
-    'RefreshRequestDict',
+    'LoginRequestSchema',
+    'LoginResponseSchema',
+    'RefreshRequestSchema',
+    'TokenSchema',
 ]

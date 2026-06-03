@@ -1,10 +1,11 @@
-#from typing import TypedDict
+from typing import TypedDict
 
 from httpx import Response
 
 from clients.api_client import APIClient
 from clients.public_http_builder import get_public_http_client
 from clients.users.users_schema import CreateUserResponseSchema, CreateUserRequestSchema
+
 
 class User(TypedDict):
     id: str
@@ -14,7 +15,7 @@ class User(TypedDict):
     middleName: str
 
 
-class CreateUserRequestDict(TypedDict):
+class CreateUserRequestDict(CreateUserRequestSchema):
     email: str
     password: str
     lastName: str
@@ -22,7 +23,7 @@ class CreateUserRequestDict(TypedDict):
     middleName: str
 
 
-class CreateUserResponseDict(TypedDict):
+class CreateUserResponseDict(CreateUserResponseSchema):
     user: User
 
 

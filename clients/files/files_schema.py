@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, HttpUrl
 from tools.fakers import fake
 
+
 class FileSchema(BaseModel):
     """
     Описание структуры файла.
@@ -30,4 +31,6 @@ class CreateFileResponseSchema(BaseModel):
 
 
 class GetFileResponseSchema:
-    pass
+    @classmethod
+    def model_validate_json(cls, text):
+        pass
