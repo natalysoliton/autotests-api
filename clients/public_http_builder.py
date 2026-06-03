@@ -1,9 +1,5 @@
-"""
-Публичный билдер для создания HTTP-клиента без авторизации.
-"""
-
 from httpx import Client
-
+from clients.event_hooks import curl_event_hook  # Импортируем event hook
 
 def get_public_http_client() -> Client:
     """
@@ -13,5 +9,6 @@ def get_public_http_client() -> Client:
     """
     return Client(
         timeout=100,
-        base_url="http://localhost:8000"
+        base_url="http://localhost:8000",
+        event_hooks={"request": [curl_event_hook]}  # Добавляем event hook для запроса
     )

@@ -9,11 +9,10 @@ templates
 __pycache__
 
 # allure
-# allure-results
-# allure-report
+allure-results
+allure-report
 
 # testing artifacts
-# *.html
-# *.json
-# videos
-# tracing
+*.html
+*.json
+
