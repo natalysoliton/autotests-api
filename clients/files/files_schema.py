@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, FilePath  # Добавили FilePath
 from tools.fakers import fake
 
 
@@ -20,7 +20,7 @@ class CreateFileRequestSchema(BaseModel):
     filename: str = Field(default_factory=lambda: f"{fake.uuid4()}.png")
     # Директорию оставляем статичной, чтобы все тестовые файлы на сервере попадали в одну папку
     directory: str = Field(default="tests")
-    upload_file: str
+    upload_file: FilePath  # Изменили тип с str на FilePath
 
 
 class CreateFileResponseSchema(BaseModel):
@@ -30,7 +30,8 @@ class CreateFileResponseSchema(BaseModel):
     file: FileSchema
 
 
-class GetFileResponseSchema:
-    @classmethod
-    def model_validate_json(cls, text):
-        pass
+class GetFileResponseSchema(BaseModel):  # Исправили класс (был неправильно определен)
+    """
+    Описание структуры ответа получения файла.
+    """
+    file: FileSchema
