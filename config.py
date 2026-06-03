@@ -38,5 +38,14 @@ class Settings(BaseSettings):
         return Settings(allure_results_dir=allure_results_dir)
 
 
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        extra='allow',  # Разрешаем дополнительные переменные
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_nested_delimiter=".",
+    )
+
+
 # Теперь вызываем метод initialize
 settings = Settings.initialize()
