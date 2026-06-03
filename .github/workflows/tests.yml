@@ -91,7 +91,7 @@ jobs:
 
       # 3. Шаг для генерации и отображения отчёта Allure с историей
       - name: Generate Allure Report with history
-        uses: simple-elf/allure-report-action@v1.12
+        uses: andrcuns/allure-report-action@v1.12
         with:
           allure_results: allure-results  # Каталог с результатами тестов
           allure_history: allure-history  # Каталог для истории отчётов Allure
