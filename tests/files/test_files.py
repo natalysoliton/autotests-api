@@ -34,6 +34,7 @@ from config import settings  # Импортируем настройки
 @allure.suite(AllureFeature.FILES)
 class TestFiles:
 
+
     @allure.tag(AllureTag.CREATE_ENTITY)
     @allure.story(AllureStory.CREATE_ENTITY)
     @allure.sub_suite(AllureStory.CREATE_ENTITY)
@@ -49,6 +50,7 @@ class TestFiles:
         assert_create_file_response(request, response_data)
         validate_json_schema(response.json(), response_data.model_json_schema())
 
+    #@pytest.mark.xdist_group(name="files-group")  # Добавили xdist группу
     @allure.tag(AllureTag.GET_ENTITY)
     @allure.story(AllureStory.GET_ENTITY)
     @allure.sub_suite(AllureStory.GET_ENTITY)

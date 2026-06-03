@@ -1,15 +1,13 @@
-from clients.courses.courses_schema import (
-    CourseSchema,
-    UpdateCourseRequestSchema,
-    UpdateCourseResponseSchema,
-    GetCoursesResponseSchema,
-    CreateCourseResponseSchema,
-    CreateCourseRequestSchema
-)
+import allure
+
+from clients.courses.courses_schema import CourseSchema, UpdateCourseRequestSchema, UpdateCourseResponseSchema, \
+    GetCoursesResponseSchema, CreateCourseResponseSchema, CreateCourseRequestSchema
 from tools.assertions.base import assert_equal, assert_length
 from tools.assertions.files import assert_file
 from tools.assertions.users import assert_user
-import allure  # Импортируем allure
+from tools.logger import get_logger  # Импортируем функцию для создания логгера
+
+logger = get_logger("COURSES_ASSERTIONS")  # Создаем логгер с именем "COURSES_ASSERTIONS"
 
 @allure.step("Check create course response")  # Добавили allure шаг
 def assert_create_course_response(
@@ -28,6 +26,9 @@ def assert_create_course_response(
     :param response: Ответ API с данными созданного курса.
     :raises AssertionError: Если хотя бы одно поле не совпадает или вложенные сущности отсутствуют.
     """
+    # Логируем факт начала проверки
+    logger.info("Check create course response")
+
     # Проверяем, что в ответе присутствует объект курса
     assert response.course is not None, "Course object is missing in response"
 
@@ -67,6 +68,9 @@ def assert_update_course_response(
     :param response: Ответ API с обновленными данными курса.
     :raises AssertionError: Если хотя бы одно поле не совпадает.
     """
+    # Логируем факт начала проверки
+    logger.info("Check update course response")
+
     if request.title is not None:
         assert_equal(response.course.title, request.title, "title")
 
@@ -92,6 +96,9 @@ def assert_course(actual: CourseSchema, expected: CourseSchema):
     :param expected: Ожидаемые данные курса.
     :raises AssertionError: Если хотя бы одно поле не совпадает.
     """
+    # Логируем факт начала проверки
+    logger.info("Check course")
+
     assert_equal(actual.id, expected.id, "id")
     assert_equal(actual.title, expected.title, "title")
     assert_equal(actual.max_score, expected.max_score, "max_score")
@@ -116,6 +123,9 @@ def assert_get_courses_response(
     :param create_course_responses: Список API ответов при создании курсов.
     :raises AssertionError: Если данные курсов не совпадают.
     """
+    # Логируем факт начала проверки
+    logger.info("Check get courses response")
+
     assert_length(get_courses_response.courses, create_course_responses, "courses")
 
     for index, create_course_response in enumerate(create_course_responses):
