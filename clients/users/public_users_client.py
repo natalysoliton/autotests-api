@@ -1,21 +1,20 @@
-from typing import TypedDict
-
 from httpx import Response
 
 from clients.api_client import APIClient
 from clients.public_http_builder import get_public_http_client
-from clients.users.users_schema import CreateUserResponseSchema, CreateUserRequestSchema
+from clients.users.users_schema import CreateUserResponseSchema, CreateUserRequestSchema, UserSchema
+import allure  # Импортируем allure
 
 
-class User(TypedDict):
-    id: str
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
+# class User(TypedDict):
+#    id: str
+#    email: str
+#    lastName: str
+#    firstName: str
+#   middleName: str
 
 
-class CreateUserRequestDict(CreateUserRequestSchema):
+class CreateUserRequestSchema(CreateUserRequestSchema):
     email: str
     password: str
     lastName: str
@@ -24,7 +23,7 @@ class CreateUserRequestDict(CreateUserRequestSchema):
 
 
 class CreateUserResponseDict(CreateUserResponseSchema):
-    user: User
+    user: UserSchema
 
 
 class PublicUsersClient(APIClient):
@@ -32,6 +31,7 @@ class PublicUsersClient(APIClient):
     Клиент для работы с /api/v1/users (публичные методы)
     """
 
+    @allure.step("Create user")  # Добавили allure шаг
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """
         Метод создает пользователя.
