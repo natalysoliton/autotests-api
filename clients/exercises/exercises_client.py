@@ -1,4 +1,5 @@
 from httpx import Response
+import allure  # Импортируем allure
 
 from clients.api_client import APIClient
 from clients.exercises.exercises_schema import GetExercisesQuerySchema, CreateExerciseRequestSchema, \
@@ -12,6 +13,7 @@ class ExercisesClient(APIClient):
     Клиент для работы с /api/v1/exercises
     """
 
+    @allure.step("Get exercises")  # Добавили allure шаг
     def get_exercises_api(self, query: GetExercisesQuerySchema) -> Response:
         """
         Метод получения списка заданий.
@@ -21,6 +23,7 @@ class ExercisesClient(APIClient):
         """
         return self.get("/api/v1/exercises", params=query.model_dump(by_alias=True))
 
+    @allure.step("Get exercise by id {exercise_id}")  # Добавили allure шаг
     def get_exercise_api(self, exercise_id: str) -> Response:
         """
         Метод получения задания.
@@ -30,6 +33,7 @@ class ExercisesClient(APIClient):
         """
         return self.get(f"/api/v1/exercises/{exercise_id}")
 
+    @allure.step("Create exercise")  # Добавили allure шаг
     def create_exercise_api(self, request: CreateExerciseRequestSchema) -> Response:
         """
         Метод создания задания.
@@ -39,6 +43,7 @@ class ExercisesClient(APIClient):
         """
         return self.post("/api/v1/exercises", json=request.model_dump(by_alias=True))
 
+    @allure.step("Update exercise by id {exercise_id}")  # Добавили allure шаг
     def update_exercise_api(self, exercise_id: str, request: UpdateExerciseRequestSchema) -> Response:
         """
         Метод обновления задания.
@@ -49,9 +54,10 @@ class ExercisesClient(APIClient):
         """
         return self.patch(
             f"/api/v1/exercises/{exercise_id}",
-            json=request.model_dump(by_alias=True)
+            json=request.model_dump(by_alias=True, exclude_none=True)
         )
 
+    @allure.step("Delete exercise by id {exercise_id}")  # Добавили allure шаг
     def delete_exercise_api(self, exercise_id: str) -> Response:
         """
         Метод удаления задания.
@@ -61,18 +67,22 @@ class ExercisesClient(APIClient):
         """
         return self.delete(f"/api/v1/exercises/{exercise_id}")
 
+    @allure.step("Get exercises and deserialize response")  # Добавили allure шаг
     def get_exercises(self, query: GetExercisesQuerySchema) -> GetExercisesResponseSchema:
         response = self.get_exercises_api(query)
         return GetExercisesResponseSchema.model_validate_json(response.text)
 
+    @allure.step("Get exercise by id {exercise_id} and deserialize response")  # Добавили allure шаг
     def get_exercise(self, exercise_id: str) -> GetExerciseResponseSchema:
         response = self.get_exercise_api(exercise_id)
         return GetExerciseResponseSchema.model_validate_json(response.text)
 
+    @allure.step("Create exercise and deserialize response")  # Добавили allure шаг
     def create_exercise(self, request: CreateExerciseRequestSchema) -> CreateExerciseResponseSchema:
         response = self.create_exercise_api(request)
         return CreateExerciseResponseSchema.model_validate_json(response.text)
 
+    @allure.step("Update exercise by id {exercise_id} and deserialize response")  # Добавили allure шаг
     def update_exercise(
             self,
             exercise_id: str,
