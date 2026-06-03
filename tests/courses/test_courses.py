@@ -1,7 +1,8 @@
 from http import HTTPStatus
 
-import allure  # Импортируем allure
+import allure
 import pytest
+from allure_commons.types import Severity
 
 from clients.courses.courses_client import CoursesClient
 from clients.courses.courses_schema import UpdateCourseRequestSchema, UpdateCourseResponseSchema, GetCoursesQuerySchema, \
@@ -13,8 +14,7 @@ from tools.assertions.base import assert_status_code
 from tools.assertions.courses import assert_update_course_response, assert_get_courses_response, \
     assert_create_course_response
 from tools.assertions.schema import validate_json_schema
-from tools.allure.tags import AllureTag  # Импортируем enum AllureTag
-from allure_commons.types import Severity  # Импортируем enum Severity из Allure
+from tools.allure.tags import AllureTag
 from tools.allure.epics import AllureEpic
 from tools.allure.features import AllureFeature
 from tools.allure.stories import AllureStory
@@ -25,19 +25,21 @@ from tools.allure.stories import AllureStory
 @allure.tag(AllureTag.COURSES, AllureTag.REGRESSION)
 @allure.epic(AllureEpic.LMS)
 @allure.feature(AllureFeature.COURSES)
+@allure.parent_suite(AllureEpic.LMS)  # Добавили parent_suite
+@allure.suite(AllureFeature.COURSES)  # Добавили suite
 class TestCourses:
 
     @allure.tag(AllureTag.CREATE_ENTITY)
     @allure.story(AllureStory.CREATE_ENTITY)
+    @allure.sub_suite(AllureStory.CREATE_ENTITY)  # Добавили sub_suite
     @allure.title("Create course")
-    @allure.severity(Severity.BLOCKER)  # Добавили severity
+    @allure.severity(Severity.BLOCKER)
     def test_create_course(
             self,
             courses_client: CoursesClient,
             function_user: UserFixture,
             function_file: FileFixture
     ):
-
         # Arrange: Подготавливаем данные для создания курса
         request = CreateCourseRequestSchema(
             preview_file_id=function_file.response.file.id,
@@ -48,79 +50,60 @@ class TestCourses:
         response = courses_client.create_course_api(request)
 
         # Assert: Проверяем ответ API
-        # 1. Проверяем статус-код ответа
         assert_status_code(response.status_code, HTTPStatus.OK)
 
-        # 2. Десериализуем JSON-ответ в Pydantic-модель
         response_data = CreateCourseResponseSchema.model_validate_json(response.text)
-
-        # 3. Проверяем, что данные в ответе соответствуют запросу
         assert_create_course_response(request, response_data)
-
-        # 4. Валидируем JSON-схему ответа
         validate_json_schema(response.json(), response_data.model_json_schema())
 
-        @allure.tag(AllureTag.GET_ENTITIES)
-        @allure.story(AllureStory.GET_ENTITIES)
-        @allure.title("Get courses")
-        @allure.severity(Severity.BLOCKER)  # Добавили severity
-        def test_get_courses(
-                self,
-                courses_client: CoursesClient,
-                function_user: UserFixture,
-                function_course: CourseFixture
-        ):
+    @allure.tag(AllureTag.GET_ENTITIES)
+    @allure.story(AllureStory.GET_ENTITIES)
+    @allure.sub_suite(AllureStory.GET_ENTITIES)  # Добавили sub_suite
+    @allure.title("Get courses")
+    @allure.severity(Severity.BLOCKER)
+    def test_get_courses(
+            self,
+            courses_client: CoursesClient,
+            function_user: UserFixture,
+            function_course: CourseFixture
+    ):
+        # Arrange: Формируем параметры запроса, передавая user_id
+        query = GetCoursesQuerySchema(user_id=function_user.response.user.id)
 
-            # Arrange: Формируем параметры запроса, передавая user_id
-            query = GetCoursesQuerySchema(user_id=function_user.response.user.id)
+        # Act: Отправляем GET-запрос на получение списка курсов
+        response = courses_client.get_courses_api(query)
 
-            # Act: Отправляем GET-запрос на получение списка курсов
-            response = courses_client.get_courses_api(query)
+        # Assert: Проверяем ответ API
+        assert_status_code(response.status_code, HTTPStatus.OK)
 
-            # Assert: Проверяем ответ API
-            # 1. Проверяем статус-код ответа
-            assert_status_code(response.status_code, HTTPStatus.OK)
+        response_data = GetCoursesResponseSchema.model_validate_json(response.text)
+        assert_get_courses_response(response_data, [function_course.response])
+        validate_json_schema(response.json(), response_data.model_json_schema())
 
-            # 2. Десериализуем JSON-ответ в Pydantic-модель
-            response_data = GetCoursesResponseSchema.model_validate_json(response.text)
+    @allure.tag(AllureTag.UPDATE_ENTITY)
+    @allure.story(AllureStory.UPDATE_ENTITY)
+    @allure.sub_suite(AllureStory.UPDATE_ENTITY)  # Добавили sub_suite
+    @allure.title("Update course")
+    @allure.severity(Severity.CRITICAL)
+    def test_update_course(self, courses_client: CoursesClient, function_course: CourseFixture):
+        # Arrange: Получаем ID созданного курса из фикстуры
+        course_id = function_course.response.course.id
 
-            # 3. Проверяем, что список курсов содержит созданный курс
-            assert_get_courses_response(response_data, [function_course.response])
+        # Формируем данные для обновления курса
+        request = UpdateCourseRequestSchema(
+            title="Обновленное название курса",
+            description="Обновленное описание курса",
+            max_score=150,
+            min_score=30,
+            estimated_time=90
+        )
 
-            # 4. Валидируем JSON-схему ответа
-            validate_json_schema(response.json(), response_data.model_json_schema())
+        # Act: Отправляем PATCH-запрос на обновление курса
+        response = courses_client.update_course_api(course_id, request)
 
-        @allure.tag(AllureTag.UPDATE_ENTITY)
-        @allure.story(AllureStory.UPDATE_ENTITY)
-        @allure.title("Update course")
-        @allure.severity(Severity.CRITICAL)  # Добавили severity
-        def test_update_course(self, courses_client: CoursesClient, function_course: CourseFixture):
+        # Assert: Проверяем ответ API
+        assert_status_code(response.status_code, HTTPStatus.OK)
 
-            # Arrange: Получаем ID созданного курса из фикстуры
-            course_id = function_course.response.course.id
-
-            # Формируем данные для обновления курса
-            request = UpdateCourseRequestSchema(
-                title="Обновленное название курса",
-                description="Обновленное описание курса",
-                max_score=150,
-                min_score=30,
-                estimated_time=90
-            )
-
-            # Act: Отправляем PATCH-запрос на обновление курса
-            response = courses_client.update_course_api(course_id, request)
-
-            # Assert: Проверяем ответ API
-            # 1. Проверяем статус-код ответа
-            assert_status_code(response.status_code, HTTPStatus.OK)
-
-            # 2. Десериализуем JSON-ответ в Pydantic-модель
-            response_data = UpdateCourseResponseSchema.model_validate_json(response.text)
-
-            # 3. Проверяем, что обновленные данные соответствуют запросу
-            assert_update_course_response(request, response_data)
-
-            # 4. Валидируем JSON-схему ответа
-            validate_json_schema(response.json(), response_data.model_json_schema())
-
+        response_data = UpdateCourseResponseSchema.model_validate_json(response.text)
+        assert_update_course_response(request, response_data)
+        validate_json_schema(response.json(), response_data.model_json_schema())
