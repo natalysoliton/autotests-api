@@ -5,4 +5,4 @@ curl -X 'GET' \
   -H 'accept-encoding: gzip, deflate' \
   -H 'connection: keep-alive' \
   -H 'user-agent: python-httpx/0.28.1' \
-  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOiIyMDI2LTA2LTA0VDE3OjQ4OjUyLjEyMzQyNSIsInVzZXJfaWQiOiI3NWNjNTMzNC0zNmE0LTQzMTktOWJjMC0zMjViOGQ4NWQ1NDAifQ.hUOccnzL7qemELOmGUR8h9hYscoSIY9SDklsPq0v8zA'
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOiIyMDI2LTA2LTA0VDE3OjU1OjU5Ljg5ODE4NCIsInVzZXJfaWQiOiI1YjMzNzE2OS0wNDA0LTRlOGQtOTJlNS03OTY1OWFkNmExYTIifQ.pCNxVY0GvPo8qDrEqd1qIR1HNIOs1DKv20gPccMc0K4'

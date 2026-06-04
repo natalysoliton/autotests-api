@@ -7,4 +7,4 @@ curl -X 'POST' \
   -H 'user-agent: python-httpx/0.28.1' \
   -H 'content-length: 124' \
   -H 'content-type: application/json' \
-  -d '{"email":"torresbryan@example.com","password":"$P_gVuzQ86","lastName":"Stone","firstName":"Christopher","middleName":"Mike"}'
+  -d '{"email":"khanhector@example.net","password":"al2OE6Nj#!","lastName":"Donovan","firstName":"Joshua","middleName":"Danielle"}'
