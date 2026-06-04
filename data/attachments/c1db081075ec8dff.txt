@@ -5,6 +5,6 @@ curl -X 'POST' \
   -H 'accept-encoding: gzip, deflate' \
   -H 'connection: keep-alive' \
   -H 'user-agent: python-httpx/0.28.1' \
-  -H 'content-length: 121' \
+  -H 'content-length: 116' \
   -H 'content-type: application/json' \
-  -d '{"email":"johnboone@example.com","password":"%1iA2GXqJP","lastName":"Garcia","firstName":"Melinda","middleName":"Angela"}'
+  -d '{"email":"dclark@example.net","password":")JK0cYfu)9","lastName":"Pugh","firstName":"Rachel","middleName":"Matthew"}'
