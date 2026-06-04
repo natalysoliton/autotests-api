@@ -4,11 +4,11 @@ INFO     HTTP_CLIENT:event_hooks.py:28 Make POST request to http://localhost:800
 INFO     HTTP_CLIENT:event_hooks.py:38 Got response 200 OK from http://localhost:8000/api/v1/authentication/login
 INFO     HTTP_CLIENT:event_hooks.py:28 Make POST request to http://localhost:8000/api/v1/files
 INFO     HTTP_CLIENT:event_hooks.py:38 Got response 200 OK from http://localhost:8000/api/v1/files
-INFO     HTTP_CLIENT:event_hooks.py:28 Make DELETE request to http://localhost:8000/api/v1/files/40fdbcb0-dbfe-4cbb-9c98-10320ecb97cc
-INFO     HTTP_CLIENT:event_hooks.py:38 Got response 200 OK from http://localhost:8000/api/v1/files/40fdbcb0-dbfe-4cbb-9c98-10320ecb97cc
+INFO     HTTP_CLIENT:event_hooks.py:28 Make DELETE request to http://localhost:8000/api/v1/files/5afd2ac5-e9f3-4b59-a394-cafc9fe2ef8c
+INFO     HTTP_CLIENT:event_hooks.py:38 Got response 200 OK from http://localhost:8000/api/v1/files/5afd2ac5-e9f3-4b59-a394-cafc9fe2ef8c
 INFO     BASE_ASSERTIONS:base.py:19 Check that response status code equals to 200
-INFO     HTTP_CLIENT:event_hooks.py:28 Make GET request to http://localhost:8000/api/v1/files/40fdbcb0-dbfe-4cbb-9c98-10320ecb97cc
-INFO     HTTP_CLIENT:event_hooks.py:38 Got response 404 Not Found from http://localhost:8000/api/v1/files/40fdbcb0-dbfe-4cbb-9c98-10320ecb97cc
+INFO     HTTP_CLIENT:event_hooks.py:28 Make GET request to http://localhost:8000/api/v1/files/5afd2ac5-e9f3-4b59-a394-cafc9fe2ef8c
+INFO     HTTP_CLIENT:event_hooks.py:38 Got response 404 Not Found from http://localhost:8000/api/v1/files/5afd2ac5-e9f3-4b59-a394-cafc9fe2ef8c
 INFO     BASE_ASSERTIONS:base.py:19 Check that response status code equals to 404
 INFO     FILES_ASSERTIONS:files.py:128 Check file not found response
 INFO     ERRORS_ASSERTIONS:errors.py:62 Check internal error response
