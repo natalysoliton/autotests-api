@@ -1,5 +1,5 @@
 "BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
 "0","LMS service","0","Files","3","0","Validate entity","0"
-"0","LMS service","0","Files","1","0","Delete entity","0"
-"0","LMS service","0","Files","1","0","Create entity","0"
 "0","LMS service","0","Files","1","0","Get entity","0"
+"0","LMS service","0","Files","1","0","Create entity","0"
+"0","LMS service","0","Files","1","0","Delete entity","0"
